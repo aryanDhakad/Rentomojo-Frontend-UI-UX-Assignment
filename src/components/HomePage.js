@@ -15,7 +15,10 @@ export default function HomePage() {
 
   const [loading, setLoading] = useState(true);
   const [apiData, setApiData] = useState([]);
-  const [searched, setSearched] = useState("");
+  const [searched, setSearched] = useState({
+    name: "",
+    company: "",
+  });
   const [fullData, setFullData] = useState([]);
 
   useEffect(() => {
@@ -32,19 +35,53 @@ export default function HomePage() {
     getData();
   }, []);
 
-  const handleSearch = (e) => {
-    setSearched(e.target.value);
-
-    if (e.target.value !== "") {
+  useEffect(() => {
+    if (searched.name !== "" || searched.company !== "") {
       const newData = () => {
-        return fullData.filter((item) => {
-          return item.name.toLowerCase().includes(e.target.value.toLowerCase());
+        let names = fullData.filter((item) => {
+          return item.name.toLowerCase().includes(searched.name.toLowerCase());
         });
+        let companyies = fullData.filter((item) => {
+          return item.company.name
+            .toLowerCase()
+            .includes(searched.company.toLowerCase());
+        });
+        return names.filter((item) => companyies.includes(item));
       };
       setApiData(newData());
     } else {
       setApiData(fullData);
     }
+  }, [searched]);
+
+  const handleSearch = (e) => {
+    const { name, value } = e.target;
+    setSearched((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+
+    // if (value !== "") {
+    //   const newData = () => {
+    //     let names = fullData.filter((item) => {
+    //         return item.name
+    //           .toLowerCase()
+    //           .includes(value.toLowerCase());
+    //         });
+    //     let companyies = fullData.filter((item) => {
+
+    //         return item.company.name
+    //           .toLowerCase()
+    //           .includes(value.toLowerCase());
+    //     });
+    //     return names.filter((item) => companyies.includes(item));
+    //   };
+    //   setApiData(newData());
+    // } else {
+    //   setApiData(fullData);
+    // }
   };
 
   if (loading) {
@@ -62,8 +99,16 @@ export default function HomePage() {
         autoComplete="off"
       >
         <TextField
-          value={searched}
-          label="Search"
+          value={searched.name}
+          label="name"
+          name="name"
+          variant="standard"
+          onChange={handleSearch}
+        />
+        <TextField
+          value={searched.company}
+          label="company"
+          name="company"
           variant="standard"
           onChange={handleSearch}
         />
