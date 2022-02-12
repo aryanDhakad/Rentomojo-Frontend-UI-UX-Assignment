@@ -36,26 +36,6 @@ export default function Posts() {
     getData();
   }, []);
 
-  const onDelete = async (id) => {
-    await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (res.status !== 200) {
-          return;
-        } else {
-          setApiData(
-            apiData.filter((post) => {
-              return post.id !== id;
-            })
-          );
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   const handleSearch = (e) => {
     setSearched(e.target.value);
 
@@ -129,10 +109,7 @@ export default function Posts() {
                   {row.title}
                 </TableCell>
                 <TableCell align="right">
-                  <Link to={`/post/${row.id}`}> View Post</Link>
-                </TableCell>
-                <TableCell align="right">
-                  <button onClick={() => onDelete(row.id)}>Delete</button>
+                  <Link to={`/post/${row.id}&${row.userId}`}> View Post</Link>
                 </TableCell>
               </TableRow>
             ))}

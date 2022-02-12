@@ -9,7 +9,7 @@ function Main() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/posts/:id" element={<Posts />} />
-        <Route path="/post/:id" element={<Post />} />
+        <Route path="/post/:id&:userId" element={<Post />} />
       </Routes>
     </Router>
   );

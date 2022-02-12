@@ -5,9 +5,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 function Post() {
-  const { id } = useParams();
+  const { id, userId } = useParams();
+  const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,6 +28,22 @@ function Post() {
 
     getData();
   }, [id]);
+
+  const onDelete = async (id) => {
+    await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (res.status !== 200) {
+          return;
+        } else {
+          navigate(`/posts/${userId}`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const getComments = async (id) => {
     setLoading(true);
@@ -56,6 +73,13 @@ function Post() {
           }}
         >
           {showComments ? "Hide Comments" : "Show Comments"}
+        </button>
+        <button
+          onClick={() => {
+            onDelete(id);
+          }}
+        >
+          Delete
         </button>
       </Box>
 
