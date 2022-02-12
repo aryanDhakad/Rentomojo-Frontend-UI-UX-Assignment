@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -18,6 +19,7 @@ export default function Posts() {
   const [apiData, setApiData] = useState([]);
   const [searched, setSearched] = useState("");
   const [fullData, setFullData] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     async function getData() {
@@ -26,7 +28,7 @@ export default function Posts() {
       );
       let data = await response.json();
       data = data.filter((post) => post.userId === parseInt(id));
-      setApiData(data);
+      setApiData([data[0], data[1]]);
       setFullData(data);
       setLoading(false);
     }
@@ -49,6 +51,16 @@ export default function Posts() {
     } else {
       setApiData(fullData);
     }
+  };
+
+  const pagination = (event, value) => {
+    setPage(value);
+    const newData = () => {
+      return fullData.filter((item, index) => {
+        return index >= (value - 1) * 2 && index < value * 2;
+      });
+    };
+    setApiData(newData());
   };
 
   if (loading) {
@@ -104,6 +116,12 @@ export default function Posts() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        count={fullData.length / 2}
+        page={page}
+        onChange={pagination}
+        defaultPage={1}
+      />
     </div>
   );
 }
