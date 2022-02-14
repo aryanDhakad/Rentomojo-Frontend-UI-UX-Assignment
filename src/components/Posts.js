@@ -34,7 +34,7 @@ export default function Posts() {
     }
 
     getData();
-  }, []);
+  }, [id]);
 
   const handleSearch = (e) => {
     setSearched(e.target.value);
